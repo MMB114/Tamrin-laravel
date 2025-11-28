@@ -1,0 +1,13 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Document</title>
+</head>
+<body>
+<h1>Store Page</h1>
+
+<a href="{{ route("courses") }}">courses page</a>
+</body>
+</html>

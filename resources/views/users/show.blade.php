@@ -1,16 +1,24 @@
-@extends('layout')
+@extends('layouts.app')
+
+@section('title','نمایش کاربر')
 
 @section('content')
-    <div class="max-w-2xl mx-auto bg-white rounded-lg shadow-lg p-8">
-        <h1 class="text-3xl font-bold mb-6">جزئیات کاربر</h1>
-        <div class="space-y-4 text-lg">
-            <p><strong>آیدی:</strong> {{ $user['id'] }}</p>
-            <p><strong>نام:</strong> {{ $user['name'] }}</p>
-            <p><strong>ایمیل:</strong> {{ $user['email'] }}</p>
-            <p><strong>موبایل:</strong> {{ $user['phone'] }}</p>
-        </div>
-        <div class="mt-8">
-            <a href="{{ route('users.index') }}" class="bg-blue-600 text-white px-6 py-3 rounded-lg">بازگشت به لیست</a>
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0">اطلاعات کاربر</h5>
+                </div>
+                <div class="card-body">
+                    <p><strong>شناسه:</strong> {{ $user->id }}</p>
+                    <p><strong>نام:</strong> {{ $user->name }}</p>
+                    <p><strong>ایمیل:</strong> {{ $user->email }}</p>
+                    <p><strong>تلفن:</strong> {{ $user->phone ?? '—' }}</p>
+
+                    <a href="{{ route('users.edit', $user->id) }}" class="btn btn-outline-warning">ویرایش</a>
+                    <a href="{{ route('users.index') }}" class="btn btn-outline-secondary">بازگشت</a>
+                </div>
+            </div>
         </div>
     </div>
 @endsection

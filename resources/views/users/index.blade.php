@@ -1,47 +1,53 @@
-@extends('layout')
+@extends('layouts.app')
+
+@section('title','لیست کاربران')
 
 @section('content')
-    <div class="bg-white rounded-lg shadow-lg p-6">
-        <div class="flex justify-between items-center mb-6">
-            <h1 class="text-3xl font-bold text-gray-800">لیست کاربران</h1>
-            <a href="{{ route('users.create') }}" class="bg-blue-600 text-white px-5 py-3 rounded-lg hover:bg-blue-700 transition">
-                افزودن کاربر جدید
-            </a>
-        </div>
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="mb-0">لیست کاربران</h2>
+        <a href="{{ route('users.create') }}" class="btn btn-success">+ کاربر جدید</a>
+    </div>
 
-        <div class="overflow-x-auto">
-            <table class="w-full table-auto border-collapse">
-                <thead>
-                <tr class="bg-gray-800 text-white">
-                    <th class="px-4 py-3 text-right">آیدی</th>
-                    <th class="px-4 py-3 text-right">نام</th>
-                    <th class="px-4 py-3 text-right">ایمیل</th>
-                    <th class="px-4 py-3 text-right">موبایل</th>
-                    <th class="px-4 py-3 text-right">عملیات</th>
-                </tr>
-                </thead>
-                <tbody>
-                @forelse($users as $user)
-                    <tr class="border-b hover:bg-gray-50">
-                        <td class="px-4 py-3">{{ $user['id'] }}</td>
-                        <td class="px-4 py-3 font-medium">{{ $user['name'] }}</td>
-                        <td class="px-4 py-3">{{ $user['email'] }}</td>
-                        <td class="px-4 py-3">{{ $user['phone'] }}</td>
-                        <td class="px-4 py-3 flex gap-2">
-                            <a href="{{ route('users.show', $user['id']) }}" class="bg-gray-600 text-white px-3 py-1 rounded text-sm">نمایش</a>
-                            <a href="{{ route('users.edit', $user['id']) }}" class="bg-yellow-600 text-white px-3 py-1 rounded text-sm">ویرایش</a>
-                            <form action="{{ route('users.destroy', $user['id']) }}" method="POST" class="inline">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" onclick="return confirm('مطمئنی؟')" class="bg-red-600 text-white px-3 py-1 rounded text-sm">حذف</button>
-                            </form>
-                        </td>
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table align-middle">
+                    <thead>
+                    <tr class="text-muted">
+                        <th>#</th>
+                        <th>نام</th>
+                        <th>ایمیل</th>
+                        <th>تلفن</th>
+                        <th class="text-end">عملیات</th>
                     </tr>
-                @empty
-                    <tr><td colspan="5" class="text-center py-8 text-gray-500">هیچ کاربری وجود ندارد</td></tr>
-                @endforelse
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                    @forelse($users as $user)
+                        <tr>
+                            <td>{{ $user->id }}</td>
+                            <td>{{ $user->name }}</td>
+                            <td>{{ $user->email }}</td>
+                            <td>{{ $user->phone ?? '—' }}</td>
+                            <td class="text-end">
+                                <a class="btn btn-sm btn-outline-primary" href="{{ route('users.show', $user->id) }}">نمایش</a>
+                                <a class="btn btn-sm btn-outline-warning" href="{{ route('users.edit', $user->id) }}">ویرایش</a>
+                                <form action="{{ route('users.destroy', $user->id) }}" method="POST" style="display:inline;">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('آیا مطمئنید می‌خواهید حذف کنید؟')">حذف</button>
+                                </form>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr><td colspan="5" class="text-center text-muted">هیچ کاربری یافت نشد.</td></tr>
+                    @endforelse
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="mt-3">
+                {{ $users->links() }} <!-- pagination (با استایل بوت‌استرپ اگر لاراول pagination config داشته باشه) -->
+            </div>
         </div>
     </div>
 @endsection

@@ -1,74 +1,46 @@
-@extends('layout')
+@extends('layouts.app')
+
+@section('title','ویرایش کاربر')
 
 @section('content')
-    <div class="max-w-2xl mx-auto bg-white rounded-lg shadow-lg p-8">
-        <h1 class="text-3xl font-bold mb-8 text-gray-800">ویرایش کاربر</h1>
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-sm">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0">ویرایش کاربر</h5>
+                </div>
+                <div class="card-body">
+                    <form action="{{ route('users.update', $user->id) }}" method="POST">
+                        @csrf
+                        @method('PUT')
 
-        <form action="{{ route('users.update', $user['id']) }}" method="POST">
-            @csrf
-            @method('PUT')
+                        <div class="mb-3">
+                            <label class="form-label">نام</label>
+                            <input type="text" name="name" value="{{ old('name', $user->name) }}" class="form-control" required>
+                        </div>
 
-            <div class="mb-6">
-                <label for="name" class="block text-gray-700 font-medium mb-2">نام کامل</label>
-                <input
-                    type="text"
-                    name="name"
-                    id="name"
-                    value="{{ old('name', $user['name']) }}"
-                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 transition @error('name') border-red-500 @enderror"
-                    required
-                >
-                @error('name')
-                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                @enderror
+                        <div class="mb-3">
+                            <label class="form-label">ایمیل</label>
+                            <input type="email" name="email" value="{{ old('email', $user->email) }}" class="form-control" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">تلفن</label>
+                            <input type="text" name="phone" value="{{ old('phone', $user->phone) }}" class="form-control">
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">رمز جدید (در صورت تغییر)</label>
+                            <input type="password" name="password" class="form-control" placeholder="اگر نمی‌خواهید تغییر دهد خالی بگذارید">
+                        </div>
+
+                        <div class="d-flex justify-content-between">
+                            <a href="{{ route('users.index') }}" class="btn btn-outline-secondary">بازگشت</a>
+                            <button class="btn btn-warning" type="submit">بروزرسانی</button>
+                        </div>
+                    </form>
+                </div>
             </div>
-
-            <div class="mb-6">
-                <label for="email" class="block text-gray-700 font-medium mb-2">ایمیل</label>
-                <input
-                    type="email"
-                    name="email"
-                    id="email"
-                    value="{{ old('email', $user['email']) }}"
-                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 transition @error('email') border-red-500 @enderror"
-                    required
-                >
-                @error('email')
-                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                @enderror
-            </div>
-
-            <div class="mb-8">
-                <label for="phone" class="block text-gray-700 font-medium mb-2">شماره موبایل</label>
-                <input
-                    type="text"
-                    name="phone"
-                    id="phone"
-                    value="{{ old('phone', $user['phone']) }}"
-                    placeholder="09123456789"
-                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 transition @error('phone') border-red-500 @enderror"
-                    required
-                >
-                @error('phone')
-                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                @enderror
-            </div>
-
-            <div class="flex gap-4">
-                <button
-                    type="submit"
-                    class="bg-green-600 text-white px-8 py-3 rounded-lg hover:bg-green-700 transition font-medium text-lg"
-                >
-                    بروزرسانی کاربر
-                </button>
-
-                <a
-                    href="{{ route('users.index') }}"
-                    class="bg-gray-600 text-white px-8 py-3 rounded-lg hover:bg-gray-700 transition font-medium text-lg"
-                >
-                    انصراف
-                </a>
-            </div>
-        </form>
+        </div>
     </div>
 @endsection

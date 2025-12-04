@@ -1,28 +1,45 @@
-<!-- create.blade.php -->
-@extends('layout')
+@extends('layouts.app')
+
+@section('title','ایجاد کاربر')
 
 @section('content')
-    <div class="max-w-2xl mx-auto bg-white rounded-lg shadow-lg p-8">
-        <h1 class="text-2xl font-bold mb-6">افزودن کاربر جدید</h1>
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-sm">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0">ایجاد کاربر جدید</h5>
+                </div>
+                <div class="card-body">
+                    <form action="{{ route('users.store') }}" method="POST">
+                        @csrf
 
-        <form action="{{ route('users.store') }}" method="POST">
-            @csrf
-            <div class="mb-4">
-                <label class="block text-gray-700 mb-2">نام</label>
-                <input type="text" name="name" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-blue-500" required>
+                        <div class="mb-3">
+                            <label class="form-label">نام</label>
+                            <input type="text" name="name" value="{{ old('name') }}" class="form-control" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">ایمیل</label>
+                            <input type="email" name="email" value="{{ old('email') }}" class="form-control" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">تلفن</label>
+                            <input type="text" name="phone" value="{{ old('phone') }}" class="form-control">
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">رمز عبور</label>
+                            <input type="password" name="password" class="form-control" required>
+                        </div>
+
+                        <div class="d-flex justify-content-between">
+                            <a href="{{ route('users.index') }}" class="btn btn-outline-secondary">بازگشت</a>
+                            <button class="btn btn-primary" type="submit">ذخیره</button>
+                        </div>
+                    </form>
+                </div>
             </div>
-            <div class="mb-4">
-                <label class="block text-gray-700 mb-2">ایمیل</label>
-                <input type="email" name="email" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-blue-500" required>
-            </div>
-            <div class="mb-6">
-                <label class="block text-gray-700 mb-2">موبایل</label>
-                <input type="text" name="phone" placeholder="09123456789" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-blue-500" required>
-            </div>
-            <div class="flex gap-4">
-                <button type="submit" class="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700">ذخیره</button>
-                <a href="{{ route('users.index') }}" class="bg-gray-600 text-white px-6 py-3 rounded-lg hover:bg-gray-700">انصراف</a>
-            </div>
-        </form>
+        </div>
     </div>
 @endsection

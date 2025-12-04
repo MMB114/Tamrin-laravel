@@ -3,99 +3,69 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
-    private $users = [];
-
-    public function __construct()
-    {
-
-        $this->users = collect([
-            ['id' => 1, 'name' => 'محمد صفایی', 'email' => 'mohammad@example.com', 'phone' => '08421234567'],
-            ['id' => 2, 'name' => 'سارا حسینی', 'email' => 'sara@example.com', 'phone' => '093244567'],
-            ['id' => 3, 'name' => 'حسین کازار', 'email' => 'hisin@example.com', 'phone' => '0784484567'],
-        ]);
-    }
-
-
     public function index()
     {
-        $users = $this->users;
+
+        $users = User::orderBy('id','desc')->paginate(10);
         return view('users.index', compact('users'));
     }
-
 
     public function create()
     {
         return view('users.create');
     }
 
-
     public function store(Request $request)
     {
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
-            'phone' => 'required|string|regex:/^09[0-9]{9}$/',
+            'password' => 'required|string|min:6',
+            'phone' => 'nullable|string|max:30',
         ]);
 
-        $newUser = [
-            'id' => $this->users->max('id') + 1,
-            'name' => $request->name,
-            'email' => $request->email,
-            'phone' => $request->phone,
-        ];
+        User::create($request->only('name','email','password','phone'));
 
-        $this->users->push(($newUser));
-
-        return redirect()->route('users')->with('success', 'کاربر با موفقیت اضافه شد!');
+        return redirect()->route('users.index')->with('success', 'کاربر با موفقیت ثبت شد.');
     }
 
-
-    public function show($id)
+    public function show(User $user)
     {
-        $user = $this->users->firstWhere('id', $id);
-        if (!$user) abort(404);
-
         return view('users.show', compact('user'));
     }
 
-
-    public function edit($id)
+    public function edit(User $user)
     {
-        $user = $this->users->firstWhere('id', $id);
-        if (!$user) abort(404);
-
         return view('users.edit', compact('user'));
     }
 
-
-    public function update(Request $request, $id)
+    public function update(Request $request, User $user)
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|email',
-            'phone' => 'required|string|regex:/^09[0-9]{9}$/',
+            'email' => 'required|email|unique:users,email,'.$user->id,
+            'password' => 'nullable|string|min:6',
+            'phone' => 'nullable|string|max:30',
         ]);
 
-        $this->users = $this->users->map(function ($user) use ($request, $id) {
-            if ($user['id'] == $id) {
-                $user['name'] = $request->name;
-                $user['email'] = $request->email;
-                $user['phone'] = $request->phone;
-            }
-            return $user;
-        });
+        $data = $request->only('name','email','phone');
+        if ($request->filled('password')) {
+            $data['password'] = $request->password;
+        }
 
-        return redirect()->route('users.index')->with('success', 'کاربر با موفقیت ویرایش شد!');
+        $user->update($data);
+
+        return redirect()->route('users.index')->with('success', 'اطلاعات کاربر به‌روزرسانی شد.');
     }
 
-    public function destroy($id)
+    public function destroy(User $user)
     {
-        $this->users = $this->users->where('id', '!=', $id);
-
-        return redirect()->route('users.index')->with('success', 'کاربر با موفقیت حذف شد!');
+        $user->delete();
+        return redirect()->route('users.index')->with('success', 'کاربر حذف شد.');
     }
 }
